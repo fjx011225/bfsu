@@ -1,0 +1,30 @@
+/* 全局样式 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #096efb2f;
+}
+
+/* 头部样式 */
+header {
+    background-color: #2649d3c3;
+    color: hsl(0, 0%, 100%);
+    padding: 55px;
+    text-align: center; /* 将文本居中 */
+    animation: colorChange 5s infinite alternate, fontSizeChange 1s infinite alternate; /* 颜色和字体大小变化闪动动画 */
+}
+
+@keyframes colorChange {
+    0% { color: hsl(0, 0%, 100%); }
+    50% { color: hsl(0, 0%, 80%); }
+    100% { color: hsl(0, 0%, 100%); }
+}
+
+@keyframes fontSizeChange {
+    0% { font-size: 100px; }
+    50% { font-size: 110px; }
+    100% { font-size: 100px; }
+}
+
+/* 其他样式请按照需要继续添加 */

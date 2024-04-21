@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星际战斗</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('4.1.webp'); /* 请替换为你的背景图片路径 */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #game-container {
+      background-color: rgba(255, 255, 255, 0.8); /* 添加背景颜色以增加对比度 */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #693cf0;
+    }
+
+    #settings {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #start-game, #restart-btn {
+      background-color: #693cf0;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #start-game:hover, #restart-btn:hover {
+      background-color: #4e2ab8;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      grid-gap: 10px;
+    }
+
+    .cell {
+      background-color: #693cf0ca;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 80px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .cell:hover {
+      background-color: #4e2ab8;
+    }
+
+    #game-info {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* 添加样式用于音乐控制按钮 */
+    #music-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #play-pause-btn, #volume-control {
+      background-color: #693cf0;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    #play-pause-btn:hover, #volume-control:hover {
+      background-color: #4e2ab8;
+    }
+  </style>
+</head>
+<body>
+  <!-- 添加音乐播放器 -->
+  <audio id="bg-music" src="歌3.mp3" loop preload="auto"></audio> <!-- 请替换为你的背景音乐文件路径 -->
+
+  <div id="game-container">
+    <h1>星际战斗</h1>
+    <div id="settings">
+      <label for="board-size">棋盘大小:</label>
+      <select id="board-size">
+        <option value="3">3x3</option>
+        <option value="4">4x4</option>
+        <option value="5">5x5</option>
+      </select>
+      <button id="start-game">开始游戏</button>
+    </div>
+    <div class="board"></div>
+    <div id="game-info">
+      <span id="turn-info">当前玩家: X</span>
+      <button id="restart-btn">重新开始</button>
+    </div>
+    <!-- 添加音乐控制按钮 -->
+    <div id="music-controls">
+      <button id="play-pause-btn">播放</button>
+      <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5">
+    </div>
+  </div>
+
+  <script>
+    const gameContainer = document.getElementById('game-container');
+    const boardSizeSelect = document.getElementById('board-size');
+    const startGameBtn = document.getElementById('start-game');
+    const board = document.querySelector('.board');
+    const turnInfo = document.getElementById('turn-info');
+    const restartBtn = document.getElementById('restart-btn');
+    const bgMusic = document.getElementById('bg-music');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const volumeControl = document.getElementById('volume-control');
+
+    let currentPlayer = 'X';
+    let gameEnded = false;
+    let boardSize = 3;
+    let winningCombinations = [];
+
+    startGameBtn.addEventListener('click', startGame);
+    boardSizeSelect.addEventListener('change', updateBoardSize);
+    restartBtn.addEventListener('click', restartGame);
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    volumeControl.addEventListener('input', adjustVolume);
+
+    // 自动播放音乐
+    window.addEventListener('load', () => {
+      playBackgroundMusic();
+    });
+
+    function startGame() {
+      gameContainer.style.display = 'block';
+      boardSize = parseInt(boardSizeSelect.value);
+      generateBoard();
+      generateWinningCombinations();
+      resetGame();
+    }
+
+    function updateBoardSize() {
+      boardSize = parseInt(boardSizeSelect.value);
+    }
+
+    function generateBoard() {
+      board.innerHTML = '';
+      board.style.gridTemplateColumns = `repeat(${boardSize}, 100px)`;
+      board.style.gridTemplateRows = `repeat(${boardSize}, 100px)`;
+
+      for (let i = 0; i < boardSize * boardSize; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.setAttribute('data-index', i);
+        cell.addEventListener('click', handleCellClick);
+        board.appendChild(cell);
+      }
+    }
+
+    function generateWinningCombinations() {
+      winningCombinations = [];
+
+      // 横向
+      for (let i = 0; i < boardSize; i++) {
+        const row = [];
+        for (let j = 0; j < boardSize; j++) {
+          row.push(i * boardSize + j);
+        }
+        winningCombinations.push(row);
+      }
+
+      // 纵向
+      for (let i = 0; i < boardSize; i++) {
+        const col = [];
+        for (let j = 0; j < boardSize; j++) {
+          col.push(j * boardSize + i);
+        }
+        winningCombinations.push(col);
+      }
+
+      // 斜向
+      const diagonal1 = [];
+      const diagonal2 = [];
+      for (let i = 0; i < boardSize; i++) {
+        diagonal1.push(i * boardSize + i);
+        diagonal2.push(i * boardSize + (boardSize - 1 - i));
+      }
+      winningCombinations.push(diagonal1, diagonal2);
+    }
+
+    function handleCellClick(e) {
+      const cellIndex = e.target.getAttribute('data-index');
+
+      if (gameEnded || e.target.textContent !== '') {
+        return;
+      }
+
+      e.target.textContent = currentPlayer;
+
+      if (checkWin(currentPlayer, cellIndex)) {
+        gameEnded = true;
+        alert(`${currentPlayer} 获胜!`);
+        return;
+      }
+
+      if (checkDraw()) {
+        gameEnded = true;
+        alert('平局!');
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      turnInfo.textContent = `当前玩家: ${currentPlayer}`;
+    }
+
+    function checkWin(player, cellIndex) {
+      return winningCombinations.some(combination => {
+        return combination.every(index => {
+          return board.children[index].textContent === player;
+        });
+      });
+    }
+
+    function checkDraw() {
+      return [...board.children].every(cell => {
+        return cell.textContent !== '';
+      });
+    }
+
+    function resetGame() {
+      [...board.children].forEach(cell => cell.textContent = '');
+      currentPlayer = 'X';
+      gameEnded = false;
+      turnInfo.textContent = '当前玩家: X';
+    }
+
+    function restartGame() {
+      resetGame();
+      generateBoard();
+      generateWinningCombinations();
+    }
+
+    function playBackgroundMusic() {
+      bgMusic.play();
+    }
+
+    function togglePlayPause() {
+      if (bgMusic.paused) {
+        bgMusic.play();
+        playPauseBtn.textContent = '暂停';
+      } else {
+        bgMusic.pause();
+        playPauseBtn.textContent = '播放';
+      }
+    }
+
+    function adjustVolume() {
+      bgMusic.volume = volumeControl.value;
+    }
+  </script>
+</body>
+</html>

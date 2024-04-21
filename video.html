@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际探险</title>
+    <link rel="stylesheet" href="Untitled-1.html">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #096efb2f;
+        }
+
+        /* 头部样式 */
+        header {
+            background-color: #2649d3c3;
+            color: hsl(0, 0%, 100%);
+            padding: 40px;
+            text-align: center;
+        }
+
+        header a {
+            color: #cac8c8;
+            text-decoration: none;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        /* 主体样式 */
+        main {
+            display: flex;
+            flex-direction: column; /* 修改为纵向排列 */
+            align-items: center; /* 居中对齐 */
+            padding: 20px;
+        }
+
+        .video-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px; /* 调整视频框之间的垂直间距 */
+        }
+
+        .video {
+            margin-right: 20px; /* 调整视频框和文字介绍之间的水平间距 */
+        }
+
+        .video video {
+            width: 500px; /* 调整视频框的宽度 */
+        }
+
+        .content {
+            flex-grow: 1;
+        }
+
+        .content h3 {
+            margin-top: 0;
+            font-size: 40px;
+        }
+
+        .content p {
+            margin-bottom: 10px;
+            color: #440455ec;
+        }
+
+        .content .styled-text {
+            padding: 30px;
+            text-align: left; /* 文字居左 */
+            background-color: #fff;
+        }
+
+        /* 底部样式 */
+        footer {
+            background-color: #410efbe4;
+            color: #9624d8;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#">星际探险</a>
+    </header>
+
+    <main>
+        <div class="video-card">
+            <div class="video">
+                <video id="video1" controls>
+                    <source src="视频1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="content">
+                <h3>史迪奇最可爱！</h3>
+                <p>大家一起来跳舞</p>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video">
+                <video id="video2" controls>
+                    <source src="视频2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="content">
+                <h3>史迪奇和莉萝打架</h3>
+                <p>“我没有碰你！我碰的是空气！”</p>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video">
+                <video id="video2" controls>
+                    <source src="视频3.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="content">
+                <h3>史迪奇失控</h3>
+                <p>小怪兽来袭！</p>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video">
+                <video id="video2" controls>
+                    <source src="视频4.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="content">
+                <h3>欧哈纳意味着...</h3>
+                <p>欧哈呐意味着家，家意味着没有人会被抛弃</p>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video">
+                <video id="video2" controls>
+                    <source src="视频5.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="content">
+                <h3>史迪奇和莉萝谈心</h3>
+                <p>你可以把我当家人</p>
+            </div>
+        </div>
+
+        <!-- 你可以复制以上代码来添加更多视频卡片 -->
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 星际探险. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // 获取所有视频元素
+        var videos = document.querySelectorAll('video');
+        
+        // 当前播放的视频索引
+        var currentVideoIndex = 0;
+        
+        // 播放下一个视频
+        function playNextVideo() {
+            if (currentVideoIndex < videos.length - 1) {
+                // 暂停当前视频
+                videos[currentVideoIndex].pause();
+                // 播放下一个视频
+                currentVideoIndex++;
+                videos[currentVideoIndex].play();
+            }
+        }
+        
+        // 监听视频播放结束事件
+        videos.forEach(function(video) {
+            video.addEventListener('ended', playNextVideo);
+        });
+        
+        // 播放第一个视频
+        videos[currentVideoIndex].play();
+    </script>
+</body>
+</html>

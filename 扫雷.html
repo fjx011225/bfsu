@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扫雷游戏</title>
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(9, 30px);
+            grid-gap: 2px;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cell.revealed {
+            background-color: #eee;
+        }
+
+        .cell.mine {
+            background-color: #f00;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button id="reset-btn">重新开始</button>
+        <span>剩余雷数: <span id="mines-left"></span></span>
+    </div>
+    <div id="game-board" class="game-board"></div>
+
+    <script>
+        const rows = 9;
+        const cols = 9;
+        const mines = 10;
+        let board = [];
+        let gameOver = false;
+        let flagCount = 0;
+
+        function initGame() {
+            gameOver = false;
+            flagCount = 0;
+            board = createBoard();
+            placeMines();
+            renderBoard();
+            updateMinesLeft();
+        }
+
+        function createBoard() {
+            const newBoard = [];
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    row.push({ isMine: false, isRevealed: false, isFlagged: false, neighbors: 0 });
+                }
+                newBoard.push(row);
+            }
+            return newBoard;
+        }
+
+        function placeMines() {
+            let minesPlaced = 0;
+            while (minesPlaced < mines) {
+                const row = Math.floor(Math.random() * rows);
+                const col = Math.floor(Math.random() * cols);
+                if (!board[row][col].isMine) {
+                    board[row][col].isMine = true;
+                    minesPlaced++;
+                    updateNeighbors(row, col);
+                }
+            }
+        }
+
+        function updateNeighbors(row, col) {
+            for (let i = Math.max(row - 1, 0); i <= Math.min(row + 1, rows - 1); i++) {
+                for (let j = Math.max(col - 1, 0); j <= Math.min(col + 1, cols - 1); j++) {
+                    if (!board[i][j].isMine) {
+                        board[i][j].neighbors++;
+                    }
+                }
+            }
+        }
+
+        function renderBoard() {
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.innerHTML = '';
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    if (board[i][j].isRevealed) {
+                        cell.classList.add('revealed');
+                        if (board[i][j].isMine) {
+                            cell.classList.add('mine');
+                            cell.textContent = '💣';
+                        } else {
+                            cell.textContent = board[i][j].neighbors || '';
+                        }
+                    } else if (board[i][j].isFlagged) {
+                        cell.textContent = '🚩';
+                    }
+                    cell.addEventListener('click', () => handleCellClick(i, j));
+                    cell.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        handleRightClick(i, j);
+                    });
+                    gameBoard.appendChild(cell);
+                }
+            }
+        }
+
+        function handleCellClick(row, col) {
+            if (gameOver || board[row][col].isFlagged) return;
+
+            if (board[row][col].isMine) {
+                gameOver = true;
+                revealMines();
+                alert('游戏结束!');
+            } else {
+                revealCell(row, col);
+                checkWin();
+            }
+        }
+
+        function handleRightClick(row, col) {
+            if (gameOver || board[row][col].isRevealed) return;
+
+            board[row][col].isFlagged = !board[row][col].isFlagged;
+            flagCount += board[row][col].isFlagged ? 1 : -1;
+            updateMinesLeft();
+            renderBoard();
+        }
+
+        function revealCell(row, col) {
+            if (!board[row][col].isRevealed) {
+                board[row][col].isRevealed = true;
+                if (board[row][col].neighbors === 0) {
+                    revealNeighbors(row, col);
+                }
+                renderBoard();
+            }
+        }
+
+        function revealNeighbors(row, col) {
+            for (let i = Math.max(row - 1, 0); i <= Math.min(row + 1, rows - 1); i++) {
+                for (let j = Math.max(col - 1, 0); j <= Math.min(col + 1, cols - 1); j++) {
+                    if (!board[i][j].isMine && !board[i][j].isRevealed) {
+                        revealCell(i, j);
+                    }
+                }
+            }
+        }
+
+        function revealMines() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (board[i][j].isMine) {
+                        board[i][j].isRevealed = true;
+                    }
+                }
+            }
+            renderBoard();
+        }
+
+        function checkWin() {
+            let unrevealed = 0;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (!board[i][j].isRevealed && !board[i][j].isMine) {
+                        unrevealed++;
+                    }
+                }
+            }
+            if (unrevealed === 0) {
+                gameOver = true;
+                alert('恭喜你赢了!');
+            }
+        }
+
+        function updateMinesLeft() {
+            const minesLeftSpan = document.getElementById('mines-left');
+            minesLeftSpan.textContent = mines - flagCount;
+        }
+
+        const resetBtn = document.getElementById('reset-btn');
+        resetBtn.addEventListener('click', initGame);
+
+        initGame();
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扫雷游戏</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ab5fe090;
+            overflow: hidden;
+        }
+
+        #game-board {
+            display: grid;
+            grid-gap: 20px;
+            background-color: #6f02b7b7;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(145, 17, 209, 0.747);
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #d766b9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .cell.revealed {
+            background-color: #139fdf;
+        }
+
+        .cell.mine {
+            background-color: #f00;
+        }
+
+        #settings {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #game-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        <!DOCTYPE html>
+<html lang="en">
+</body>
+</html>

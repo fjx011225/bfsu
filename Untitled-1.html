@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>史迪奇和它的奇妙探险</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- 添加外部CSS文件链接 -->
+</head>
+<body>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #096efb2f;
+        }
+
+        /* 头部样式 */
+        header {
+            background-color: #2649d3c3;
+            color: hsl(0, 0%, 100%);
+            padding: 55px;
+            text-align: center; /* 将文本居中 */
+            animation: colorChange 5s infinite alternate; /* 颜色变化闪动动画 */
+        }
+        
+        .logo a {
+            text-decoration: none;
+            font-size: 100px;
+            font-weight: bold;
+            /* 添加文本阴影 */
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+            /* 添加文本外边框 */
+            border: 10px solid #702bd1;
+            padding: 30px 40px;
+            border-radius: 60px;
+            animation: jump 1s infinite; /* 字体跳动动画 */
+        }
+
+        @keyframes jump {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+            position: relative;
+        }
+
+        nav ul li a {
+            color: #d4d1d1;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #096df9;
+        }
+
+        nav ul li a.active::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #e3e0e0;
+        }
+
+        /* 主体样式 */
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-card {
+            width: 300px;
+            margin: 20px;
+            box-shadow: 0 0 10px rgba(2, 59, 246, 0.988);
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #7e10bd42;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .game-card .content {
+            padding: 10px;
+        }
+
+        .game-card h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .game-card p {
+            margin-bottom: 40px;
+            color: #440455ec;
+        }
+
+        .game-card .play-btn {
+            display: inline-block;
+            background-color: #db128187;
+            color: #e31616e8;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .game-card .play-btn:hover {
+            background-color: #3196af81;
+        }
+
+        /* 音乐播放器样式 */
+        #music-controls {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #play-pause-btn, #volume-control {
+            background-color: #db118074;
+            color: #e31616e8;
+            border: none;
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 0 5px;
+        }
+
+        #play-pause-btn:hover, #volume-control:hover {
+            background-color: #3196af81;
+        }
+        
+        /* 底部样式 */
+        footer {
+            background-color: #410efbe4;
+            color: #9624d8;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">史迪奇和它的奇妙探险</a>
+        </div>
+    </header>
+    <main>
+        <div class="game-card">
+            <img src="1.jpg" alt="游戏图片">
+            <div class="content">
+                <h3>星际塔防</h3>
+                <p>在这款游戏中,史迪仔需要在星球表面布置炮塔来抵御外星生物的进攻。合理安排防御阵型,保卫家园!</p>
+                <a href="game.html" class="play-btn">开始游戏</a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <img src="2.jpg" alt="游戏图片">
+            <div class="content">
+                <h3>星际探险</h3>
+                <p>探索未知的星系,发现新的星球和文明。在这个充满危机和机遇的宇宙中寻找属于你的一片天地。</p>
+                <a href="video.html" class="play-btn">开始游戏</a>
+            </div>
+        </div>        
+
+        <div class="game-card">
+            <img src="3.png" alt="游戏图片">
+            <div class="content">
+                <h3>星际战争</h3>
+                <p>在这场星际大战中,你将指挥舰队与敌人进行殊死搏斗。采取正确的战术,赢得最终的胜利!</p>
+                <a href="Untitled-11.html" class="play-btn">开始游戏</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 星际宝贝. All rights reserved.</p>
+    </footer>
+
+    <!-- 音乐播放器代码 -->
+    <audio id="bg-music" autoplay loop src="歌1.mp3"></audio>
+    <div id="music-controls">
+        <button id="play-pause-btn">暂停</button>
+        <input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
+    </div>
+
+    <script>
+        const bgMusic = document.getElementById('bg-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const volumeControl = document.getElementById('volume-control');
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        volumeControl.addEventListener('input', adjustVolume);
+
+        function togglePlayPause() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                playPauseBtn.textContent = '暂停';
+            } else {
+                bgMusic.pause();
+                playPauseBtn.textContent = '播放';
+            }
+        }
+
+        function adjustVolume() {
+            bgMusic.volume = volumeControl.value;
+        }
+    </script>
+</body>
+</html>
